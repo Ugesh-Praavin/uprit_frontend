@@ -1,6 +1,5 @@
 /**
- * PostCard — displays a single achievement in the feed.
- * Features: avatar, achievement badge, XP badge, timestamp, optional image, hover animation.
+ * PostCard — achievement post with verification badge.
  */
 export default function PostCard({ post }) {
     const badgeConfig = {
@@ -13,9 +12,17 @@ export default function PostCard({ post }) {
         OTHER: { label: '✨ Achievement', bg: 'bg-gray-500/15', text: 'text-gray-400', border: 'border-gray-500/20' },
     };
 
+    const verificationColors = {
+        VERIFIED: { bg: 'bg-emerald-500/15', text: 'text-emerald-400', border: 'border-emerald-500/20', icon: '✔' },
+        REJECTED: { bg: 'bg-red-500/15', text: 'text-red-400', border: 'border-red-500/20', icon: '✗' },
+        PENDING: { bg: 'bg-yellow-500/15', text: 'text-yellow-400', border: 'border-yellow-500/20', icon: '⏳' },
+    };
+
     const badge = badgeConfig[post.achievementType] || badgeConfig.OTHER;
+    const vBadge = verificationColors[post.verificationStatus] || verificationColors.PENDING;
 
     const timeAgo = (dateStr) => {
+        if (!dateStr) return '';
         const diff = Date.now() - new Date(dateStr).getTime();
         const mins = Math.floor(diff / 60000);
         if (mins < 1) return 'Just now';
@@ -28,56 +35,56 @@ export default function PostCard({ post }) {
 
     return (
         <article className="glass-card hover:glass-card-hover p-5 transition-all duration-300 animate-fade-in">
-            {/* Header: Avatar + Username + Badge + Time */}
+            {/* Header */}
             <div className="flex items-start gap-3 mb-3">
-                {/* Avatar placeholder */}
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-accent-primary)] to-[var(--color-accent-secondary)] flex items-center justify-center text-sm font-bold text-white shrink-0">
                     {post.username?.charAt(0)?.toUpperCase() || '?'}
                 </div>
-
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-semibold text-[var(--color-text-primary)] text-sm">
-                            {post.username}
-                        </span>
+                        <span className="font-semibold text-[var(--color-text-primary)] text-sm">{post.username}</span>
                         <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${badge.bg} ${badge.text} ${badge.border}`}>
                             {badge.label}
                         </span>
                     </div>
-                    <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
-                        {timeAgo(post.createdAt)}
-                    </p>
+                    <p className="text-xs text-[var(--color-text-muted)] mt-0.5">{timeAgo(post.createdAt)}</p>
                 </div>
-
-                {/* XP Badge */}
                 <div className="shrink-0 px-3 py-1.5 rounded-lg bg-[var(--color-accent-primary)]/10 border border-[var(--color-accent-primary)]/20">
-                    <span className="text-sm font-bold text-[var(--color-accent-primary)]">
-                        +{post.xpAwarded} XP
-                    </span>
+                    <span className="text-sm font-bold text-[var(--color-accent-primary)]">+{post.xpAwarded} XP</span>
                 </div>
             </div>
 
-            {/* Title */}
-            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-1.5">
-                {post.title}
-            </h3>
+            {/* Title & Description */}
+            <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-1.5">{post.title}</h3>
+            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-3">{post.description}</p>
 
-            {/* Description */}
-            <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-3">
-                {post.description}
-            </p>
-
-            {/* Optional Image */}
+            {/* Image */}
             {post.imageUrl && (
                 <div className="rounded-xl overflow-hidden mb-3 border border-[var(--color-border-default)]">
-                    <img
-                        src={post.imageUrl}
-                        alt={post.title}
-                        className="w-full h-48 object-cover"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                    />
+                    <img src={post.imageUrl} alt={post.title} className="w-full h-48 object-cover"
+                        onError={(e) => { e.target.style.display = 'none'; }} />
                 </div>
             )}
+
+            {/* Footer: Verification + Certificate */}
+            <div className="flex items-center gap-3 flex-wrap">
+                {/* Verification Badge */}
+                <span className={`text-xs font-medium px-2.5 py-1 rounded-full border ${vBadge.bg} ${vBadge.text} ${vBadge.border}`}>
+                    {vBadge.icon} {post.verificationStatus === 'VERIFIED'
+                        ? `Verified by ${post.verifiedByName || 'Faculty'}`
+                        : post.verificationStatus === 'REJECTED'
+                            ? 'Rejected'
+                            : 'Pending Verification'}
+                </span>
+
+                {/* Certificate Link */}
+                {post.certificateUrl && (
+                    <a href={post.certificateUrl} target="_blank" rel="noopener noreferrer"
+                        className="text-xs text-[var(--color-accent-tertiary)] hover:underline flex items-center gap-1">
+                        📎 View Certificate
+                    </a>
+                )}
+            </div>
         </article>
     );
 }

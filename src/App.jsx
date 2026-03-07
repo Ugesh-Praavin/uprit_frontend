@@ -13,6 +13,8 @@ import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
 import Skills from './pages/Skills';
 import Projects from './pages/Projects';
+import EventsPage from './pages/EventsPage';
+import FacultyPortal from './pages/FacultyPortal';
 
 export default function App() {
   return (
@@ -24,23 +26,18 @@ export default function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
-            {/* Protected Routes — wrapped in Layout (Sidebar + Navbar) */}
-            <Route
-              element={
-                <ProtectedRoute>
-                  <Layout />
-                </ProtectedRoute>
-              }
-            >
+            {/* Protected Routes */}
+            <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
               <Route index element={<FeedPage />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/skills" element={<Skills />} />
               <Route path="/projects" element={<Projects />} />
+              <Route path="/events" element={<EventsPage />} />
+              <Route path="/faculty" element={<FacultyPortal />} />
             </Route>
 
-            {/* Catch-all → Feed */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </ToastProvider>

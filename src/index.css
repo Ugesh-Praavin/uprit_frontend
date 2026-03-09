@@ -33,6 +33,10 @@
   --color-gradient-start: #6366f1;
   --color-gradient-end: #8b5cf6;
 
+  /* Dropdown / Modal */
+  --color-bg-dropdown: #1e293b;
+  --color-bg-modal: #111827;
+
   /* Shadows */
   --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
@@ -54,18 +58,20 @@
 .light {
   --color-bg-primary: #f8fafc;
   --color-bg-secondary: #ffffff;
-  --color-bg-card: rgba(255, 255, 255, 0.9);
-  --color-bg-glass: rgba(0, 0, 0, 0.03);
-  --color-bg-glass-hover: rgba(0, 0, 0, 0.06);
+  --color-bg-card: rgba(255, 255, 255, 0.95);
+  --color-bg-glass: rgba(0, 0, 0, 0.04);
+  --color-bg-glass-hover: rgba(0, 0, 0, 0.07);
+  --color-bg-dropdown: #ffffff;
+  --color-bg-modal: #ffffff;
 
   --color-text-primary: #0f172a;
   --color-text-secondary: #475569;
   --color-text-muted: #94a3b8;
 
-  --color-border-default: rgba(0, 0, 0, 0.08);
-  --color-border-hover: rgba(0, 0, 0, 0.15);
+  --color-border-default: rgba(0, 0, 0, 0.1);
+  --color-border-hover: rgba(0, 0, 0, 0.18);
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 2px 16px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
   --shadow-card-hover: 0 8px 40px rgba(99, 102, 241, 0.12);
 }
 

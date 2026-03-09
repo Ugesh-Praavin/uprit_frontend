@@ -44,10 +44,10 @@ export default function CreatePostModal({ userId, onClose, onPostCreated }) {
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-            <div className="glass-card p-6 w-full max-w-lg animate-fade-in" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-[var(--color-bg-modal)] border border-[var(--color-border-default)] rounded-2xl p-6 w-full max-w-lg animate-fade-in shadow-2xl" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between mb-5">
                     <h2 className="text-xl font-bold text-[var(--color-text-primary)]">🎯 Post Achievement</h2>
-                    <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-white text-xl cursor-pointer">✕</button>
+                    <button onClick={onClose} className="text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] text-xl cursor-pointer">✕</button>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">

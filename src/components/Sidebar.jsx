@@ -7,9 +7,13 @@ export default function Sidebar() {
 
     const studentNav = [
         { path: '/', label: 'Feed', icon: '🔥' },
+        { path: '/notifications', label: 'Notifications', icon: '🔔' },
+        { path: '/network', label: 'Network', icon: '🔗' },
+        { path: '/teams', label: 'Teams', icon: '👥' },
         { path: '/dashboard', label: 'Dashboard', icon: '📊' },
         { path: '/leaderboard', label: 'Leaderboard', icon: '🏆' },
         { path: '/profile', label: 'Profile', icon: '👤' },
+        { path: '/connections', label: 'Connections', icon: '🤝' },
         { path: '/skills', label: 'Skills', icon: '⚡' },
         { path: '/projects', label: 'Projects', icon: '📁' },
         { path: '/events', label: 'Events', icon: '📅' },
@@ -22,7 +26,7 @@ export default function Sidebar() {
     const navItems = isFaculty ? [...studentNav, ...facultyNav] : studentNav;
 
     return (
-        <aside className="fixed left-0 top-0 h-screen w-64 bg-[var(--color-bg-secondary)] border-r border-[var(--color-border-default)] flex flex-col z-40">
+        <aside className="hidden md:flex fixed left-0 top-0 h-screen w-64 bg-[var(--color-bg-secondary)] border-r border-[var(--color-border-default)] flex-col z-40">
             <div className="p-6 border-b border-[var(--color-border-default)]">
                 <h1 className="text-2xl font-bold gradient-text tracking-tight">⚡ UpRit</h1>
                 <p className="text-xs text-[var(--color-text-muted)] mt-1">Campus Achievement Platform</p>

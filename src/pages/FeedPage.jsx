@@ -6,10 +6,8 @@ import CreatePostModal from '../components/CreatePostModal';
 import Spinner from '../components/Spinner';
 
 /**
- * FeedPage — main page with 3-column layout:
- * Left: (sidebar is already rendered by Layout)
- * Center: Achievement feed
- * Right: Leaderboard + user stats
+ * FeedPage — main page with 3-column layout.
+ * Now passes currentUserId to PostCard for like/comment features.
  */
 export default function FeedPage() {
     const { user } = useAuth();
@@ -43,7 +41,6 @@ export default function FeedPage() {
 
     const handlePostCreated = (newPost) => {
         setPosts([newPost, ...posts]);
-        // Refresh profile to update XP/level
         api.get('/api/users').then(res => {
             const currentUser = res.data.find(u => u.email === user?.email);
             setProfile(currentUser);
@@ -64,14 +61,10 @@ export default function FeedPage() {
 
     return (
         <div className="animate-fade-in">
-            {/* 2-column: Feed (center) + Right Panel */}
             <div className="flex gap-6">
 
-                {/* ════════════════════════════════════════ */}
-                {/* CENTER: Feed                            */}
-                {/* ════════════════════════════════════════ */}
+                {/* CENTER: Feed */}
                 <div className="flex-1 min-w-0">
-                    {/* Header + Create Button */}
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h1 className="text-2xl font-bold text-[var(--color-text-primary)]">Achievement Feed</h1>
@@ -85,7 +78,6 @@ export default function FeedPage() {
                         </button>
                     </div>
 
-                    {/* Posts */}
                     {posts.length === 0 ? (
                         <div className="glass-card p-12 text-center">
                             <p className="text-4xl mb-3">🏆</p>
@@ -95,18 +87,19 @@ export default function FeedPage() {
                     ) : (
                         <div className="space-y-4">
                             {posts.map(post => (
-                                <PostCard key={post.id} post={post} />
+                                <PostCard
+                                    key={post.id}
+                                    post={post}
+                                    currentUserId={profile?.id}
+                                    onUpdate={loadFeed}
+                                />
                             ))}
                         </div>
                     )}
                 </div>
 
-                {/* ════════════════════════════════════════ */}
-                {/* RIGHT PANEL: Stats + Leaderboard        */}
-                {/* ════════════════════════════════════════ */}
+                {/* RIGHT PANEL */}
                 <div className="w-80 shrink-0 hidden lg:block space-y-5">
-
-                    {/* User Stats Card */}
                     {profile && (
                         <div className="glass-card p-5">
                             <div className="flex items-center gap-3 mb-4">
@@ -123,7 +116,6 @@ export default function FeedPage() {
                                 <StatMini label="Level" value={profile.level} />
                                 <StatMini label="Coins" value={profile.coins} />
                             </div>
-                            {/* XP Progress */}
                             <div className="mt-3">
                                 <div className="flex justify-between text-xs text-[var(--color-text-muted)] mb-1">
                                     <span>Level {profile.level}</span>
@@ -139,7 +131,6 @@ export default function FeedPage() {
                         </div>
                     )}
 
-                    {/* Mini Leaderboard */}
                     <div className="glass-card p-5">
                         <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">🏆 Top Players</h3>
                         <div className="space-y-2.5">
@@ -160,7 +151,6 @@ export default function FeedPage() {
                         </div>
                     </div>
 
-                    {/* XP Rules Info */}
                     <div className="glass-card p-5">
                         <h3 className="text-sm font-semibold text-[var(--color-text-primary)] mb-3">⚡ XP Guide</h3>
                         <div className="space-y-1.5 text-xs">
@@ -176,7 +166,6 @@ export default function FeedPage() {
                 </div>
             </div>
 
-            {/* Create Post Modal */}
             {showModal && (
                 <CreatePostModal
                     userId={profile?.id}

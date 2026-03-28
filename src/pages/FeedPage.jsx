@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useToast } from '../components/Toast';
 import api from '../services/api';
 import PostCard from '../components/PostCard';
 import CreatePostModal from '../components/CreatePostModal';
@@ -11,6 +12,7 @@ import Spinner from '../components/Spinner';
  */
 export default function FeedPage() {
     const { user } = useAuth();
+    const { showToast } = useToast();
     const [posts, setPosts] = useState([]);
     const [leaderboard, setLeaderboard] = useState([]);
     const [profile, setProfile] = useState(null);
@@ -40,7 +42,9 @@ export default function FeedPage() {
     };
 
     const handlePostCreated = (newPost) => {
-        setPosts([newPost, ...posts]);
+        // Post is PENDING — don't add to feed (only VERIFIED posts appear)
+        showToast('Achievement submitted for faculty verification! ⏳', 'success');
+        // Refresh profile stats
         api.get('/api/users').then(res => {
             const currentUser = res.data.find(u => u.email === user?.email);
             setProfile(currentUser);

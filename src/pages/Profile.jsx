@@ -28,7 +28,7 @@ export default function Profile() {
             if (currentUser) {
                 const [skillsRes, postsRes] = await Promise.all([
                     api.get(`/api/skills/users/${currentUser.id}`),
-                    api.get(`/api/posts/user/${currentUser.id}`),
+                    api.get(`/api/posts/my?userId=${currentUser.id}`),
                 ]);
                 setSkills(skillsRes.data);
                 setUserPosts(postsRes.data);
@@ -133,7 +133,7 @@ export default function Profile() {
                 )}
             </div>
 
-            {/* User Posts */}
+            {/* User Posts with Status Badges */}
             <div>
                 <h3 className="text-lg font-semibold text-[var(--color-text-primary)] mb-4">📝 My Achievements</h3>
                 {userPosts.length === 0 ? (
@@ -143,7 +143,32 @@ export default function Profile() {
                 ) : (
                     <div className="space-y-4">
                         {userPosts.map(post => (
-                            <PostCard key={post.id} post={post} />
+                            <div key={post.id} className="glass-card p-5">
+                                {/* Status Badge */}
+                                <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/20">
+                                            {post.achievementType?.replace(/_/g, ' ')}
+                                        </span>
+                                        <VerificationBadge status={post.verificationStatus} />
+                                    </div>
+                                    <span className="text-xs text-[var(--color-text-muted)]">
+                                        {post.xpAwarded > 0 ? `+${post.xpAwarded} XP` : ''}
+                                    </span>
+                                </div>
+                                <h4 className="font-semibold text-[var(--color-text-primary)] mb-1">{post.title}</h4>
+                                <p className="text-sm text-[var(--color-text-secondary)] mb-2">{post.description}</p>
+                                {post.verificationStatus === 'REJECTED' && post.verificationComment && (
+                                    <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-2 mt-2">
+                                        ❌ Rejection reason: {post.verificationComment}
+                                    </p>
+                                )}
+                                {post.verificationStatus === 'VERIFIED' && post.verifiedByName && (
+                                    <p className="text-xs text-emerald-400 mt-2">
+                                        ✅ Verified by {post.verifiedByName}
+                                    </p>
+                                )}
+                            </div>
                         ))}
                     </div>
                 )}
@@ -159,5 +184,19 @@ function StatBox({ label, value, icon }) {
             <p className="text-xl font-bold text-[var(--color-text-primary)] mt-1">{value ?? 0}</p>
             <p className="text-xs text-[var(--color-text-muted)]">{label}</p>
         </div>
+    );
+}
+
+function VerificationBadge({ status }) {
+    const config = {
+        PENDING: { label: '🟡 Pending Verification', cls: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
+        VERIFIED: { label: '✅ Verified', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
+        REJECTED: { label: '❌ Rejected', cls: 'bg-red-500/15 text-red-400 border-red-500/20' },
+    };
+    const c = config[status] || config.PENDING;
+    return (
+        <span className={`text-xs font-medium px-2.5 py-0.5 rounded-full border ${c.cls}`}>
+            {c.label}
+        </span>
     );
 }
